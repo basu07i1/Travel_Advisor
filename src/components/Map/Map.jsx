@@ -38,7 +38,7 @@ const Map = ({setCoordinates , setBounds , coordinates , places}) => {
                     key={i}
                     >
                         {
-                            isMobile ? (
+                            isDesktop   ? (
                                 <LocationOnOutlinedIcon color="primary" fontSize="large" />
                             ):  (
                                 <paper elevation={3} className={classes.paper}>
@@ -50,6 +50,8 @@ const Map = ({setCoordinates , setBounds , coordinates , places}) => {
                                     src={place.photo ? place.photo.images.large.url: 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'}
                                     alt={ place.name}
                                     />
+
+                                    <Rating  size="small" value={Number(place.rating)} readOnly/>
                                 </paper>
                             )
                         }

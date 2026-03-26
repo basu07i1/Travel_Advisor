@@ -11,6 +11,7 @@ import Map from './components/Map/Map';
 
 const  App = () => {
   const [places , setPlaces ] = useState([]);
+  const [childClicked , setChildClicked] = useState(null); 
 
   const [coordinates , setCoordinates] = useState({ });
   const [bounds , setBounds] = useState({});
@@ -58,6 +59,7 @@ const  App = () => {
             setBounds={setBounds}
             coordinates={coordinates}
             places={places}
+            setChildClicked ={setChildClicked}
             
             />
         </Grid>
