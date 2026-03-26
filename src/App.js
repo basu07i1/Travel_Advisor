@@ -1,5 +1,5 @@
 import React , { useState , useEffect } from 'react';
-import { CssBaseline, Grid } from '@material-ui/core';
+import { CssBaseline, Grid } from '@material-ui/core'; 
 
 // import { getPlacesData, getWeatherData } from './api/travelAdvisorAPI';
 import {getPlacesData} from './api';
@@ -12,31 +12,60 @@ import Map from './components/Map/Map';
 const  App = () => {
   const [places , setPlaces ] = useState([]);
 
+  const [coordinates , setCoordinates] = useState({ });
+  const [bounds , setBounds] = useState({});
+
   useEffect(() => {
-    getPlacesData()
-    .then((data ) => {
-      console.log(data);
-      setPlaces(data);
+    navigator.geolocation.getCurrentPosition(({ coords: {latitude, longitude}}) => {
+      setCoordinates({ lat: latitude , lng: longitude});
     })
+
+  }, []);
+
+  useEffect(() => {
+    if (!bounds) return;
+
+    let isMounted = true;
     
-  } , []);
+    getPlacesData( bounds.sw , bounds.ne )
+    .then((data ) => {
+      if (isMounted) {
+        console.log(data);
+        setPlaces(data);
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching places:', error);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+    
+  } , [bounds]);
   return (
     <>
       <CssBaseline />
       <Header /> 
       <Grid container spacing={3} style={{width:'100%'}}>
         <Grid item xs={12} md={4}>
-            <List />
+            <List places={places}  />
 
         </Grid> 
         <Grid item xs={12} md={8}>
-            <Map />
+            <Map 
+            setCoordinates={setCoordinates}
+            setBounds={setBounds}
+            coordinates={coordinates}
+            places={places}
+            
+            />
         </Grid>
 
         
 
       </Grid>
-      <h1>Hello world! </h1>
+      
     </>
   )
 }
